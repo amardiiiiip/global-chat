@@ -10,3 +10,12 @@ FROM openjdk:11-jre-slim
 COPY --from=build /home/app/target/global-chat-0.0.1-SNAPSHOT.jar /usr/local/lib/global-chat.jar
 EXPOSE 10000
 ENTRYPOINT ["java", "-jar", "/usr/local/lib/global-chat.jar"]
+
+
+
+
+
+
+
+
+
