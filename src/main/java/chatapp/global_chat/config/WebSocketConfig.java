@@ -1,5 +1,6 @@
 package chatapp.global_chat.config;
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -22,8 +23,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
-                .setAllowedOrigins("https://globalchat.wuaze.com") // Replace with your InfinityFree domain
-                .withSockJS();
+                .setAllowedOrigins("https://globalchat.wuaze.com") // Ensure exact match
+                .withSockJS()
+                .setHeartbeatTime(15000); // Add heartbeat to detect connection issues
     }
 
     @org.springframework.context.annotation.Bean
@@ -32,7 +34,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://globalchat.wuaze.com") // Replace with your InfinityFree domain
+                        .allowedOrigins("https://globalchat.wuaze.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
