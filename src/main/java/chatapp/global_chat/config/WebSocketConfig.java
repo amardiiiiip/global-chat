@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
-                .setAllowedOrigins("https://worldchat.wuaze.com") // Replace with your InfinityFree domain
+                .setAllowedOrigins("https://globalchat.wuaze.com") // Replace with your InfinityFree domain
                 .withSockJS();
     }
 
@@ -32,7 +32,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://worldchat.wuaze.com") // Replace with your InfinityFree domain
+                        .allowedOrigins("https://globalchat.wuaze.com") // Replace with your InfinityFree domain
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
