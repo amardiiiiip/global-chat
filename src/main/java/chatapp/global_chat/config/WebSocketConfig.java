@@ -1,6 +1,7 @@
 package chatapp.global_chat.config;
 
 
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -23,9 +24,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(@NonNull StompEndpointRegistry registry) {
         registry.addEndpoint("/chat")
-                .setAllowedOrigins("https://globalchat.wuaze.com") // Ensure exact match
+                .setAllowedOrigins("https://globalchat.wuaze.com") // Exact match
                 .withSockJS()
-                .setHeartbeatTime(15000); // Add heartbeat to detect connection issues
+                .setHeartbeatTime(15000); // Heartbeat to detect issues
     }
 
     @org.springframework.context.annotation.Bean
@@ -37,7 +38,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         .allowedOrigins("https://globalchat.wuaze.com")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
-                        .allowCredentials(true);
+                        .allowCredentials(true)
+                        .maxAge(3600); // Cache CORS preflight
             }
         };
     }
