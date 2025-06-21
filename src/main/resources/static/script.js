@@ -1,6 +1,5 @@
 let stompClient = null;
 
-// Language-specific rules messages
 const rulesMessages = {
     english: [
         "You can vent your frustrations here and talk freely and anonymously; no one can trace you.",
@@ -54,7 +53,6 @@ const rulesMessages = {
     ]
 };
 
-// Apply saved theme on page load, default to dark
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
@@ -70,7 +68,6 @@ function toggleTheme() {
     document.getElementById('theme-toggle').innerText = newTheme === 'light' ? 'Dark Mode' : 'Light Mode';
 }
 
-// Background particle animation (Grok-like)
 function initBackgroundAnimation() {
     const canvas = document.getElementById('background-animation');
     const ctx = canvas.getContext('2d');
@@ -128,19 +125,23 @@ function initBackgroundAnimation() {
 function showPopup(language) {
     const popup = document.getElementById('rules-popup');
     const rulesList = document.getElementById('rules-message');
-    rulesList.innerHTML = ''; // Clear previous content
-    const rules = rulesMessages[language] || rulesMessages.english; // Fallback to English
+    rulesList.innerHTML = '';
+    const rules = rulesMessages[language.toLowerCase()] || rulesMessages.english;
     rules.forEach(rule => {
         const li = document.createElement('li');
         li.innerText = rule;
         rulesList.appendChild(li);
     });
     popup.style.display = 'flex';
+    document.getElementById('output-window').style.display = 'none';
 }
 
 function closePopup() {
     document.getElementById('rules-popup').style.display = 'none';
     document.getElementById('chat-container').style.display = 'block';
+    document.getElementById('output-window').style.display = 'block';
+    connectToChat();
+    fetchMessages(); // Fetch stored messages for the selected language
 }
 
 function connectToChat() {
@@ -150,52 +151,97 @@ function connectToChat() {
         return;
     }
 
-    showPopup(language);
-
-    const socket = new SockJS('/chat');
+    document.getElementById('message').placeholder = 'Connecting to chat...';
+    const socket = new SockJS('https://global-chat-x8e5.onrender.com/chat');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function(frame) {
-        console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/' + language, function(message) {
-            showMessage(JSON.parse(message.body));
+        console.log('WebSocket connected:', frame);
+        document.getElementById('message').placeholder = 'Type your message...';
+        const subscription = stompClient.subscribe('/topic/' + language.toLowerCase(), function(message) {
+            console.log('Received from /topic/' + language.toLowerCase() + ':', message.body);
+            try {
+                const parsedMessage = JSON.parse(message.body);
+                console.log('Parsed message:', parsedMessage);
+                showMessage(parsedMessage, 'output-messages');
+            } catch (e) {
+                console.error('Parse error:', e, 'Raw body:', message.body);
+            }
         });
+        console.log('Subscribed to /topic/' + language.toLowerCase());
+    }, function(error) {
+        console.error('WebSocket error:', error);
+        alert('Connection failed. Retrying in 5 seconds... Error: ' + error);
+        document.getElementById('message').placeholder = 'Type your message...';
+        setTimeout(connectToChat, 5000);
     });
 }
 
+function fetchMessages() {
+    const language = document.getElementById('language').value.toLowerCase();
+    fetch(`https://global-chat-x8e5.onrender.com/api/messages/${language}`)
+        .then(response => response.json())
+        .then(messages => {
+            const outputMessages = document.getElementById('output-messages');
+            outputMessages.innerHTML = '';
+            messages.forEach(message => showMessage(message, 'output-messages'));
+        })
+        .catch(error => console.error('Error fetching messages:', error));
+}
+
 function sendMessage() {
-    const language = document.getElementById('language').value;
+    if (!stompClient || !stompClient.connected) {
+        console.error('No WebSocket connection');
+        alert('Not connected. Please try again.');
+        return;
+    }
+
     const messageInput = document.getElementById('message');
     const messageContent = messageInput.value.trim();
+    const language = document.getElementById('language').value.toLowerCase();
     const sender = 'Anonymous' + Math.floor(Math.random() * 1000);
 
-    // Input validation: no numbers or location/address
     const numberRegex = /\d/;
     const locationRegex = /\b(street|avenue|road|lane|drive|city|state|country|zip|postal|address|location)\b/i;
     if (numberRegex.test(messageContent)) {
-        alert('Numbers are not allowed in messages.');
+        alert('No numbers allowed.');
         return;
     }
     if (locationRegex.test(messageContent)) {
-        alert('Location or address-related content is not allowed.');
+        alert('No location content allowed.');
         return;
     }
 
-    if (messageContent && stompClient) {
-        const chatMessage = {
-            sender: sender,
-            content: messageContent
-        };
+    if (messageContent) {
+        const chatMessage = { sender, content: messageContent, language };
+        console.log('Sending to /app/chat/' + language, chatMessage);
         stompClient.send('/app/chat/' + language, {}, JSON.stringify(chatMessage));
         messageInput.value = '';
+        console.log('Message sent');
+    } else {
+        console.log('No content to send');
     }
 }
 
-function showMessage(message) {
-    const messages = document.getElementById('messages');
-    const messageElement = document.createElement('div');
-    messageElement.classList.add('message');
-    messageElement.innerText = `${message.sender}: ${message.content}`;
-    messages.appendChild(messageElement);
-    messages.scrollTop = messages.scrollHeight;
+function showMessage(message, containerId) {
+    console.log('Displaying:', message, 'in', containerId);
+    const messages = document.getElementById(containerId);
+    if (messages) {
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.innerText = `${message.sender}: ${message.content || 'No content'}`;
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight;
+        console.log('Displayed:', messageElement.innerText);
+    } else {
+        console.error(`${containerId} element not found`);
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('sendButton').addEventListener('click', sendMessage);
+    document.getElementById('message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+});

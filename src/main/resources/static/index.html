@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,29 +9,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
+    <button id="theme-toggle">Light Mode</button>
     <canvas id="background-animation"></canvas>
-    <button id="theme-toggle" onclick="toggleTheme()">Light Mode</button>
-    <div class="container">
-        <h1>Global Chat</h1>
-        <label for="language">Select Language:</label>
-        <select id="language" onchange="connectToChat()">
-            <option value="" disabled selected>Select a language</option>
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="spanish">Spanish</option>
-            <option value="french">French</option>
-            <option value="german">German</option>
-            <option value="chinese">Chinese</option>
-            <option value="arabic">Arabic</option>
-            <option value="russian">Russian</option>
-            <option value="japanese">Japanese</option>
-            <option value="korean">Korean</option>
-            <!-- Add more languages as needed -->
-        </select>
-        <div id="chat-container" style="display:none;">
-            <div id="messages"></div>
-            <input type="text" id="message" placeholder="Type your message..." onkeypress="if(event.key === 'Enter') sendMessage()">
-            <button onclick="sendMessage()">Send</button>
+    <div class="main-container">
+        <div class="container" id="chat-container" style="display: none;">
+            <h1>Global Chat</h1>
+            <label for="language">Select Language:</label>
+            <select id="language" onchange="showPopup(this.value)">
+                <option value="">Select a language</option>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="spanish">Spanish</option>
+                <option value="french">French</option>
+                <option value="german">German</option>
+                <option value="chinese">Chinese</option>
+                <option value="arabic">Arabic</option>
+                <option value="russian">Russian</option>
+                <option value="japanese">Japanese</option>
+                <option value="korean">Korean</option>
+            </select>
+            <div id="messages" class="messages"></div>
+            <input type="text" id="message" placeholder="Type your message...">
+            <button id="sendButton">Send</button>
+        </div>
+        <div class="container output-window" id="output-window" style="display: none;">
+            <h2>Language Chat</h2>
+            <div id="output-messages" class="messages"></div>
         </div>
     </div>
     <div id="rules-popup" class="popup">
