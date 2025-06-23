@@ -1,0 +1,232 @@
+:root[data-theme="light"] {
+    --background-color: #f0f0f0;
+    --container-background: white;
+    --text-color: #333;
+    --border-color: #ccc;
+    --button-background: #aaaeb2;
+    --button-hover: #0056b3;
+    --button-text: white;
+    --message-background: transparent;
+    --watermark-color: rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme="dark"] {
+    --background-color: #0a0a0a;
+    --container-background: #1c1c1c;
+    --text-color: #e0e0e0;
+    --border-color: #444;
+    --button-background: #444;
+    --button-hover: #0069d9;
+    --button-text: white;
+    --message-background: #2a2a2a;
+    --watermark-color: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: var(--text-color);
+    position: relative;
+    overflow-x: hidden;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><text x="50%" y="50%" font-family="Arial" font-size="60" fill="var(--watermark-color)" text-anchor="middle" dominant-baseline="middle" opacity="0.1">global_chat</text></svg>');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+#background-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.main-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 90%;
+    max-width: 800px;
+    gap: 20px;
+}
+
+.container {
+    background-color: var(--container-background);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    width: 45%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.output-window {
+    width: 45%;
+    max-width: 400px;
+    display: block; /* Ensure visibility after rules popup */
+}
+
+h1, h2 {
+    margin: 0 0 20px;
+    font-size: clamp(18px, 5vw, 24px);
+}
+
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--button-background);
+    color: var(--button-text);
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    text-align: center;
+    line-height: 1.2;
+    z-index: 2;
+}
+
+#theme-toggle:hover {
+    background-color: var(--button-hover);
+}
+
+select, input, button {
+    margin: 10px 0;
+    padding: 10px;
+    width: calc(100% - 22px);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: var(--container-background);
+    color: var(--text-color);
+    font-size: clamp(14px, 4vw, 16px);
+}
+
+button {
+    background-color: var(--button-background);
+    color: var(--button-text);
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: var(--button-hover);
+}
+
+.messages {
+    height: 300px;
+    max-height: 50vh;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    margin-bottom: 10px;
+    text-align: left;
+    background-color: var(--container-background);
+}
+
+.message {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: var(--message-background);
+    word-break: break-word;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: var(--container-background);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+}
+
+.popup-content h2 {
+    margin: 0 0 10px;
+    font-size: clamp(16px, 4vw, 20px);
+}
+
+.popup-content ol {
+    margin: 0 0 20px;
+    padding-left: 20px;
+    text-align: left;
+    font-size: clamp(14px, 3.5vw, 16px);
+    color: var(--text-color);
+}
+
+.popup-content ol li {
+    margin-bottom: 8px;
+}
+
+.popup-content button {
+    width: auto;
+    padding: 8px 16px;
+}
+
+@media (max-width: 600px) {
+    .main-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container, .output-window {
+        width: 95%;
+        padding: 15px;
+    }
+
+    #theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 10px;
+    }
+
+    .messages {
+        height: 40vh;
+    }
+
+    select, input, button {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    .popup-content {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .popup-content ol {
+        font-size: 14px;
+        padding-left: 15px;
+    }
+}

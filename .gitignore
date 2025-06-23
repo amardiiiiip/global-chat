@@ -1,0 +1,51 @@
+# Maven
+target/
+*.jar
+*.war
+*.ear
+!.mvn/  # Include .mvn directory for Maven wrapper (optional, see note below)
+!.mvn/wrapper/  # Include Maven wrapper files (optional)
+
+# Logs
+*.log
+
+# Local configurations
+application-local.properties
+application.properties  # Exclude if you use environment variables in Render; keep if versioned
+
+# IDEs
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Docker (if not used with Render)
+Dockerfile
+
+# Miscellaneous
+HELP.md  # Exclude if not needed in version control

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</head>
+<body>
+    <canvas id="background-animation"></canvas>
+    <button id="theme-toggle">Light Mode</button>
+
+    <div class="main-container">
+        <div class="container" id="chat-container">
+            <h1>Global Chat</h1>
+            <label for="language">Select Language:</label>
+            <select id="language">
+                <option value="">Select a language</option>
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+                <option value="spanish">Spanish</option>
+                <option value="french">French</option>
+                <option value="german">German</option>
+                <option value="chinese">Chinese</option>
+                <option value="arabic">Arabic</option>
+                <option value="russian">Russian</option>
+                <option value="japanese">Japanese</option>
+                <option value="korean">Korean</option>
+            </select>
+            <input type="text" id="message" placeholder="Type your message...">
+            <button id="sendButton">Send</button>
+        </div>
+
+        <div class="container output-window" id="output-window">
+            <h2>Language Chat</h2>
+            <div class="messages" id="output-messages"></div>
+        </div>
+    </div>
+
+    <div class="popup" id="rules-popup">
+        <div class="popup-content">
+            <h2>Chat Rules</h2>
+            <ol id="rules-message"></ol>
+            <button onclick="closePopup()">OK</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
