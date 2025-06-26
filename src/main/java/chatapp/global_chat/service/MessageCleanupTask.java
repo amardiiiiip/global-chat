@@ -15,7 +15,7 @@ public class MessageCleanupTask {
     @Autowired
     private ChatMessageRepository repository;
 
-    @Scheduled(fixedRate = 1800000) // Run every 30 minutes
+    @Scheduled(fixedRate = 21600000) // Run every 6 hours
     public void deleteOldMessages() {
         LocalDateTime cutoff = LocalDateTime.now().minusHours(6);
         repository.deleteMessagesOlderThan(cutoff);
